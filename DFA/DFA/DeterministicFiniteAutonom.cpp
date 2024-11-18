@@ -8,12 +8,12 @@ DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(const std::set<State>
 
 bool DeterministicFiniteAutomaton::VerifyAutomaton() const {
     if (Q.find(q0) == Q.end()) {
-        std::cerr << "Starea inițială nu aparține mulțimii de stări.\n";
+        std::cerr << "Starea initiala nu apartine multimii de stari.\n";
         return false;
     }
     for (const auto& finalState : F) {
         if (Q.find(finalState) == Q.end()) {
-            std::cerr << "O stare finală nu aparține mulțimii de stări.\n";
+            std::cerr << "O stare finala nu apartine multimii de stari.\n";
             return false;
         }
     }
@@ -21,7 +21,7 @@ bool DeterministicFiniteAutomaton::VerifyAutomaton() const {
         if (Q.find(transition.first.first) == Q.end() ||
             Sigma.find(transition.first.second) == Sigma.end() ||
             Q.find(transition.second) == Q.end()) {
-            std::cerr << "O tranziție nu este validă.\n";
+            std::cerr << "O tranzitie nu este valida.\n";
             return false;
         }
     }
@@ -29,7 +29,7 @@ bool DeterministicFiniteAutomaton::VerifyAutomaton() const {
 }
 
 void DeterministicFiniteAutomaton::PrintAutomaton() const {
-    std::cout << "Stări: ";
+    std::cout << "Stari: ";
     for (const auto& state : Q) {
         std::cout << state << " ";
     }
@@ -37,11 +37,11 @@ void DeterministicFiniteAutomaton::PrintAutomaton() const {
     for (const auto& symbol : Sigma) {
         std::cout << symbol << " ";
     }
-    std::cout << "\nStare inițială: " << q0 << "\nStări finale: ";
+    std::cout << "\nStare initiala: " << q0 << "\nStari finale: ";
     for (const auto& finalState : F) {
         std::cout << finalState << " ";
     }
-    std::cout << "\nTranziții:\n";
+    std::cout << "\nTranzitii:\n";
     for (const auto& transition : delta) {
         std::cout << "(" << transition.first.first << ", " << transition.first.second
             << ") -> " << transition.second << "\n";

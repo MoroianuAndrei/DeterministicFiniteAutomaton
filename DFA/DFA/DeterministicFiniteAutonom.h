@@ -16,7 +16,7 @@ public:
     bool VerifyAutomaton() const;
 
     void PrintAutomaton() const;
-    //
+    
     bool CheckWord(const std::string& word) const;
 
 private:

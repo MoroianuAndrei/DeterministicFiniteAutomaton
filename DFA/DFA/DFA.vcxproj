@@ -127,8 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Automaton.cpp" />
     <ClCompile Include="DFA.cpp" />
+    <ClCompile Include="NondeterministicFiniteAutomaton.cpp" />
     <ClCompile Include="PolishForm.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Automaton.h" />
+    <ClInclude Include="NondeterministicFiniteAutomaton.h" />
     <ClInclude Include="PolishForm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
