@@ -9,6 +9,8 @@ public:
     using Symbol = char;
     using Transition = std::map<std::pair<State, Symbol>, State>;
 
+    DeterministicFiniteAutomaton() = default;
+
     DeterministicFiniteAutomaton(const std::set<State>& states, const std::set<Symbol>& alphabet,
         const Transition& transitions, const State& initialState,
         const std::set<State>& finalStates);
