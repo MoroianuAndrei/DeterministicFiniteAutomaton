@@ -1,4 +1,4 @@
-﻿#include "DeterministicFiniteAutonom.h"
+﻿#include "DeterministicFiniteAutomaton.h"
 
 DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(const std::set<State>& states, const std::set<Symbol>& alphabet,
     const Transition& transitions, const State& initialState,
