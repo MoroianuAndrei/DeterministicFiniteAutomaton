@@ -1,10 +1,15 @@
 ﻿#include "DeterministicFiniteAutomaton.h"
 
-DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(const std::set<State>& states, const std::set<Symbol>& alphabet,
-    const Transition& transitions, const State& initialState,
-    const std::set<State>& finalStates)
+DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(
+    const std::set<std::string>& states,
+    const std::set<char>& alphabet,
+    const std::map<std::pair<std::string, char>, std::string>& transitions,
+    const std::string& initialState,
+    const std::set<std::string>& finalStates
+)
     : Q(states), Sigma(alphabet), delta(transitions), q0(initialState), F(finalStates) {
 }
+
 
 bool DeterministicFiniteAutomaton::VerifyAutomaton() const {
     if (Q.find(q0) == Q.end()) {
@@ -49,13 +54,15 @@ void DeterministicFiniteAutomaton::PrintAutomaton() const {
 }
 
 bool DeterministicFiniteAutomaton::CheckWord(const std::string& word) const {
-    State currentState = q0;
+    std::string currentState = q0;
     for (const auto& symbol : word) {
         if (Sigma.find(symbol) == Sigma.end()) {
+            std::cerr << "Simbolul '" << symbol << "' nu este în alfabet.\n";
             return false;
         }
         auto it = delta.find({ currentState, symbol });
         if (it == delta.end()) {
+            std::cerr << "Nu există tranziție din starea '" << currentState << "' cu simbolul '" << symbol << "'.\n";
             return false;
         }
         currentState = it->second;

@@ -5,15 +5,17 @@
 
 class DeterministicFiniteAutomaton {
 public:
-    using State = std::string;
-    using Symbol = char;
-    using Transition = std::map<std::pair<State, Symbol>, State>;
+    using Transition = std::map<std::pair<std::string, char>, std::string>;
 
     DeterministicFiniteAutomaton() = default;
 
-    DeterministicFiniteAutomaton(const std::set<State>& states, const std::set<Symbol>& alphabet,
-        const Transition& transitions, const State& initialState,
-        const std::set<State>& finalStates);
+    DeterministicFiniteAutomaton(
+        const std::set<std::string>& states,
+        const std::set<char>& alphabet,
+        const std::map<std::pair<std::string, char>, std::string>& transitions,
+        const std::string& initialState,
+        const std::set<std::string>& finalStates
+    );
 
     bool VerifyAutomaton() const;
 
@@ -22,9 +24,9 @@ public:
     bool CheckWord(const std::string& word) const;
 
 private:
-    std::set<State> Q;
-    std::set<Symbol> Sigma;
-    Transition delta;
-    State q0;
-    std::set<State> F;
+    std::set<std::string> Q;
+    std::set<char> Sigma;
+    std::map<std::pair<std::string, char>, std::string> delta;
+    std::string q0;
+    std::set<std::string> F;
 };
