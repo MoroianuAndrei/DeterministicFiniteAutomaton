@@ -70,11 +70,39 @@ bool DeterministicFiniteAutomaton::CheckWord(const std::string& word) const {
     return F.find(currentState) != F.end();
 }
 
-void DeterministicFiniteAutomaton::renameQs()
-{
+void DeterministicFiniteAutomaton::RenameStates() {
+    std::map<std::string, std::string> stateRenameMap;
     int stateCounter = 0;
-    for (auto transition : delta)
-    {
-        
+
+    // Generăm maparea pentru toate stările DFA-ului
+    for (const auto& state : Q) {
+        stateRenameMap[state] = "q" + std::to_string(stateCounter++) + "'";
     }
+
+    // Actualizăm starea inițială
+    q0 = stateRenameMap[q0];
+
+    // Actualizăm stările finale
+    std::set<std::string> newFinalStates;
+    for (const auto& state : F) {
+        newFinalStates.insert(stateRenameMap[state]);
+    }
+    F = std::move(newFinalStates);
+
+    // Actualizăm tranzițiile
+    std::map<std::pair<std::string, char>, std::string> newTransitions;
+    for (const auto& transition : delta) {
+        std::string newFrom = stateRenameMap[transition.first.first];
+        char symbol = transition.first.second;
+        std::string newTo = stateRenameMap[transition.second];
+        newTransitions[{newFrom, symbol}] = newTo;
+    }
+    delta = std::move(newTransitions);
+
+    // Actualizăm setul de stări
+    std::set<std::string> newStates;
+    for (const auto& state : Q) {
+        newStates.insert(stateRenameMap[state]);
+    }
+    Q = std::move(newStates);
 }

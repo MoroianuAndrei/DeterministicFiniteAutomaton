@@ -2,6 +2,7 @@
 #include <iostream>
 #include <set>
 #include <map>
+#include <string>
 
 class DeterministicFiniteAutomaton {
 public:
@@ -23,7 +24,7 @@ public:
     
     bool CheckWord(const std::string& word) const;
 
-    void renameQs();
+    void RenameStates();
 
 private:
     std::set<std::string> Q;

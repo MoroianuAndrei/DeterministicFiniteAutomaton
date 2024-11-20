@@ -35,5 +35,10 @@ int main() {
 
     dfa.PrintAutomaton();
 
+    // Rename
+    dfa.RenameStates();
+
+    dfa.PrintAutomaton();
+
     return 0;
 }
