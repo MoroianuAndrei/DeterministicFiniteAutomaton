@@ -23,6 +23,8 @@ public:
     
     bool CheckWord(const std::string& word) const;
 
+    void renameQs();
+
 private:
     std::set<std::string> Q;
     std::set<char> Sigma;

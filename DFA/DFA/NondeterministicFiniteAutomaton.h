@@ -32,6 +32,6 @@ private:
     std::set<std::string> states;
     std::set<std::string> finalStates;
     std::string initialState;
-    std::map<std::pair<std::string, char>, std::string> transitions;
+    std::map<std::pair<std::string, char>, std::set<std::string>> transitions;
     std::set<char> alphabet;
 };

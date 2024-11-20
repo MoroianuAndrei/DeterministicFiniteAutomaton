@@ -69,3 +69,12 @@ bool DeterministicFiniteAutomaton::CheckWord(const std::string& word) const {
     }
     return F.find(currentState) != F.end();
 }
+
+void DeterministicFiniteAutomaton::renameQs()
+{
+    int stateCounter = 0;
+    for (auto transition : delta)
+    {
+        
+    }
+}

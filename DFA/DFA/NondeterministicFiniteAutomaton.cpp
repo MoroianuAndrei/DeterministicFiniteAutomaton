@@ -13,16 +13,16 @@ void NondeterministicFiniteAutomaton::AddState(const std::string& state, bool is
 }
 
 void NondeterministicFiniteAutomaton::AddTransition(const std::string& from, char symbol, const std::string& to) {
-    transitions.insert({ {from, symbol}, to });
+    transitions[{from, symbol}].insert(to); // Adăugăm starea în set
     alphabet.insert(symbol); // Adăugăm simbolul în alfabet
 }
 
 void NondeterministicFiniteAutomaton::AddLambdaTransition(const std::string& from, const std::string& to) {
-    transitions.insert({ {from, '\0'}, to });
+    transitions[{from, '\0'}].insert(to); // Inserăm tranziția λ
 }
 
 void NondeterministicFiniteAutomaton::PrintAutomaton() const {
-    std::cout << "Stări: ";
+    std::cout << "Stari: ";
     for (const auto& state : states) {
         std::cout << state << " ";
     }
@@ -30,18 +30,23 @@ void NondeterministicFiniteAutomaton::PrintAutomaton() const {
     for (const auto& symbol : alphabet) {
         std::cout << symbol << " ";
     }
-    std::cout << "\nTranziții:\n";
+    std::cout << "\nTranzitii:\n";
     for (const auto& transition : transitions) {
         std::cout << transition.first.first << " --"
-            << (transition.first.second == '\0' ? "λ" : std::string(1, transition.first.second))
-            << "--> " << transition.second << "\n";
+            << (transition.first.second == '\0' ? "(lambda)" : std::string(1, transition.first.second))
+            << "--> { ";
+        for (const auto& target : transition.second) {
+            std::cout << target << " ";
+        }
+        std::cout << "}\n";
     }
-    std::cout << "Starea inițială: " << initialState << "\nStările finale: ";
+    std::cout << "Starea initiala: " << initialState << "\nStarile finale: ";
     for (const auto& state : finalStates) {
         std::cout << state << " ";
     }
     std::cout << "\n";
 }
+
 
 NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::CreateBasicAutomaton(char symbol) {
     NondeterministicFiniteAutomaton automaton;
@@ -137,7 +142,6 @@ NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::FromRegex(const
     return automatonStack.top();
 }
 
-// Implementare funcție LambdaClosure pentru o stare
 std::set<std::string> NondeterministicFiniteAutomaton::LambdaClosure(const std::string& state) const {
     std::set<std::string> closure;
     std::queue<std::string> toProcess;
@@ -147,11 +151,15 @@ std::set<std::string> NondeterministicFiniteAutomaton::LambdaClosure(const std::
     while (!toProcess.empty()) {
         std::string current = toProcess.front();
         toProcess.pop();
+
+        auto range = transitions.equal_range({ current, '\0' });
         for (const auto& transition : transitions) {
             if (transition.first.first == current && transition.first.second == '\0') { // λ-tranziție
-                if (closure.find(transition.second) == closure.end()) {
-                    closure.insert(transition.second);
-                    toProcess.push(transition.second);
+                for (const auto& target : transition.second) { // Iterăm prin toate stările țintă
+                    if (closure.find(target) == closure.end()) {
+                        closure.insert(target);
+                        toProcess.push(target);
+                    }
                 }
             }
         }
@@ -168,6 +176,7 @@ std::set<std::string> NondeterministicFiniteAutomaton::LambdaClosure(const std::
     }
     return closure;
 }
+
 // Implementare funcție ConvertToDFA pentru conversia într-un AFD
 DeterministicFiniteAutomaton NondeterministicFiniteAutomaton::ConvertToDFA() const {
     std::set<std::string> dfaStates;
@@ -196,9 +205,10 @@ DeterministicFiniteAutomaton NondeterministicFiniteAutomaton::ConvertToDFA() con
             std::set<std::string> moveSet;
             // Calculăm setul de stări atinse prin simbolul curent
             for (const auto& state : currentSet) {
+                auto range = transitions.equal_range({ state, symbol });
                 for (const auto& transition : transitions) {
                     if (transition.first.first == state && transition.first.second == symbol) {
-                        moveSet.insert(transition.second);
+                        moveSet.insert(transition.second.begin(), transition.second.end());
                     }
                 }
             }
