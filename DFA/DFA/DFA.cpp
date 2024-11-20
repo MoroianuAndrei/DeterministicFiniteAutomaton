@@ -6,6 +6,71 @@
 #include <queue>
 #include <string>
 
+#include <stack>
+#include <cctype>
+
+bool IsValidRegex(const std::string& expresie) {
+    std::stack<char> paranteze;       // Stivă pentru a verifica echilibrarea parantezelor
+    bool ultimulCaracterOperator = true; // Dacă ultimul caracter era un operator
+    char ultimOperator = NULL;
+    bool aFostCaracter = false;      // Dacă s-a găsit cel puțin un caracter valid
+
+    for (size_t i = 0; i < expresie.size(); ++i) 
+    {
+        char c = expresie[i];
+
+        if (std::isalnum(c)) 
+        {
+            // Caracter valid (literă sau cifră)
+            ultimulCaracterOperator = false;
+            aFostCaracter = true;
+        }
+        else if (c == '(') 
+        {
+            // Deschiderea unei paranteze
+            paranteze.push(c);
+            ultimulCaracterOperator = true; // Paranteza poate urma după un operator
+        }
+        else if (c == ')')
+        {
+            // Închiderea unei paranteze
+            if (paranteze.empty()) 
+            {
+                return false; // Paranteză închisă fără deschidere
+            }
+            paranteze.pop();
+            ultimulCaracterOperator = false; // Nu poate urma imediat un alt operator
+        }
+        else if (c == '|' || c == '*' || c == '+' || c == '.') 
+        {
+            // Operator (inclusiv concatenarea '.')
+            if (ultimulCaracterOperator && c != '*' && ultimOperator != '*')
+            {
+                return false; // Nu poate urma un alt operator (cu excepția '*')
+            }
+            ultimulCaracterOperator = true;
+            ultimOperator = c;
+        }
+        else 
+        {
+            // Caracter invalid
+            return false;
+        }
+    }
+
+    // Verifică dacă toate parantezele sunt închise
+    if (!paranteze.empty())
+    {
+        return false;
+    }
+
+    if (ultimOperator != NULL && ultimOperator == '*')
+        ultimulCaracterOperator = false;
+
+    // Expresia trebuie să aibă cel puțin un caracter valid
+    return aFostCaracter && !ultimulCaracterOperator;
+}
+
 void printRegex(std::string str)
 {
     std::cout << "Expresia regulata este: ";
@@ -20,6 +85,12 @@ int main() {
     std::ifstream file("file.in");
     file >> regex;
     file.close();
+
+    if (!IsValidRegex(regex))
+    {
+        std::cout << "Expresia regulata nu este valida" << std::endl;
+        return 1;
+    }
 
     // Convertirea la forma poloneză inversată (RPN)
     PolishForm polishConverter;
