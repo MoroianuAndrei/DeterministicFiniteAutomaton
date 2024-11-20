@@ -6,6 +6,15 @@
 #include <queue>
 #include <string>
 
+void printRegex(std::string str)
+{
+    std::cout << "Expresia regulata este: ";
+    for (char c : str)
+        if (c != '.')
+            std::cout << c;
+    std::cout << std::endl;
+}
+
 int main() {
     std::string regex;
     std::ifstream file("file.in");
@@ -46,6 +55,53 @@ int main() {
 
     std::cout << "Automatul Finit Determinist creat dupa redenumirea starilor" << std::endl;
     dfa.PrintAutomaton();
+
+    if (dfa.VerifyAutomaton())
+    {
+        int optiune;
+        do 
+        {
+            std::cout << "\nMeniu:\n";
+            std::cout << "1. Afisarea inteligibila a expresiei regulate.\n";
+            std::cout << "2. Afisarea automatului finit determinist.\n";
+            std::cout << "3. Verificarea unui cuvant in automat.\n";
+            std::cout << "0. Iesire.\n";
+            std::cout << "Alegeti o optiune: ";
+            std::cin >> optiune;
+            std::string word;
+
+            switch (optiune) 
+            {
+            case 1:
+                printRegex(regex);
+                break;
+            case 2:
+                dfa.PrintAutomaton();
+                break;
+            case 3:
+                std::cout << "Introduceti cuvantul ce se doreste verificat: ";
+                std::cin >> word;
+                if (dfa.CheckWord(word))
+                {
+                    std::cout << "Cuvantul " << word << " este acceptat de automat" << std::endl;
+                }
+                else
+                {
+                    std::cout << "Cuvantul " << word << " nu este acceptat de automat" << std::endl;
+                }
+                break;
+            case 0:
+                std::cout << "Iesire din program.\n";
+                break;
+            default:
+                std::cout << "Optiune invalida. Încercati din nou.\n";
+            }
+        } while (optiune != 0);
+    }
+    else
+    {
+        std::cout << "Expresia regulata nu este valida" << std::endl;
+    }
 
     return 0;
 }
