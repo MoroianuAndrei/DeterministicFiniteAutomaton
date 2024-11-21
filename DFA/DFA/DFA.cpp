@@ -108,64 +108,66 @@ int main() {
     nfa = nfa.FromRegex(rpn);
 
     // Afișează automatul construit
-    std::cout << "Automatul Finit Nedeterminist creat din forma poloneza a expresiei regulate" << std::endl;
-    nfa.PrintAutomaton();
-    for (int i = 0; i < 10; i++)
-        std::cout << std::endl;
+    //std::cout << "Automatul Finit Nedeterminist creat din forma poloneza a expresiei regulate" << std::endl;
+    //nfa.PrintAutomaton();
+    //for (int i = 0; i < 10; i++)
+    //    std::cout << std::endl;
 
     DeterministicFiniteAutomaton dfa;
     dfa = nfa.ConvertToDFA();
 
-    std::cout << "Automatul Finit Determinist creat din Automatul Finit Nedeterminist cu lambda tranzitii" << std::endl;
-    dfa.PrintAutomaton();
-    for (int i = 0; i < 10; i++)
-        std::cout << std::endl;
+    //std::cout << "Automatul Finit Determinist creat din Automatul Finit Nedeterminist cu lambda tranzitii" << std::endl;
+    //dfa.PrintAutomaton();
+    //for (int i = 0; i < 10; i++)
+    //    std::cout << std::endl;
 
     // Rename
     dfa.RenameStates();
 
-    std::cout << "Automatul Finit Determinist creat dupa redenumirea starilor" << std::endl;
-    dfa.PrintAutomaton();
+    //std::cout << "Automatul Finit Determinist creat dupa redenumirea starilor" << std::endl;
+    //dfa.PrintAutomaton();
 
     if (dfa.VerifyAutomaton())
     {
         int optiune;
         do 
         {
-            std::cout << "\nMeniu:\n";
-            std::cout << "1. Afisarea inteligibila a expresiei regulate.\n";
-            std::cout << "2. Afisarea automatului finit determinist.\n";
-            std::cout << "3. Verificarea unui cuvant in automat.\n";
-            std::cout << "0. Iesire.\n";
+            std::cout << "Meniu:" << std::endl;
+            std::cout << "1. Afisarea inteligibila a expresiei regulate." << std::endl;
+            std::cout << "2. Afisarea automatului finit determinist." << std::endl;
+            std::cout << "3. Verificarea unui cuvant in automat." << std::endl;
+            std::cout << "0. Iesire." << std::endl;
             std::cout << "Alegeti o optiune: ";
             std::cin >> optiune;
             std::string word;
 
-            switch (optiune) 
+            switch (optiune)
             {
             case 1:
                 printRegex(regex);
+                std::cout << std::endl;
                 break;
             case 2:
                 dfa.PrintAutomaton();
+                std::cout << std::endl;
                 break;
             case 3:
                 std::cout << "Introduceti cuvantul ce se doreste verificat: ";
                 std::cin >> word;
                 if (dfa.CheckWord(word))
                 {
-                    std::cout << "Cuvantul " << word << " este acceptat de automat" << std::endl;
+                    std::cout << "Cuvantul ---- " << word << " ---- este acceptat de automat" << std::endl;
                 }
                 else
                 {
-                    std::cout << "Cuvantul " << word << " nu este acceptat de automat" << std::endl;
+                    std::cout << "Cuvantul ---- " << word << " ---- nu este acceptat de automat" << std::endl;
                 }
                 break;
             case 0:
-                std::cout << "Iesire din program.\n";
+                std::cout << "Iesire din program." << std::endl;
                 break;
             default:
-                std::cout << "Optiune invalida. Încercati din nou.\n";
+                std::cout << "Optiune invalida. Încercati din nou." << std::endl;
             }
         } while (optiune != 0);
     }

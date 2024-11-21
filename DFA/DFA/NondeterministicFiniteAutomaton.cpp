@@ -26,11 +26,11 @@ void NondeterministicFiniteAutomaton::PrintAutomaton() const {
     for (const auto& state : states) {
         std::cout << state << " ";
     }
-    std::cout << "\nAlfabet: ";
+    std::cout << std::endl << "Alfabet: ";
     for (const auto& symbol : alphabet) {
         std::cout << symbol << " ";
     }
-    std::cout << "\nTranzitii:\n";
+    std::cout << std::endl << "Tranzitii:" << std::endl;
     for (const auto& transition : transitions) {
         std::cout << transition.first.first << " --"
             << (transition.first.second == '\0' ? "(lambda)" : std::string(1, transition.first.second))
@@ -38,13 +38,13 @@ void NondeterministicFiniteAutomaton::PrintAutomaton() const {
         for (const auto& target : transition.second) {
             std::cout << target << " ";
         }
-        std::cout << "}\n";
+        std::cout << "}std::endl";
     }
-    std::cout << "Starea initiala: " << initialState << "\nStarile finale: ";
+    std::cout << "Starea initiala: " << initialState << std::endl << "Starile finale: ";
     for (const auto& state : finalStates) {
         std::cout << state << " ";
     }
-    std::cout << "\n";
+    std::cout << std::endl;
 }
 
 

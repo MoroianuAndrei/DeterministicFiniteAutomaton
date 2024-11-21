@@ -13,12 +13,12 @@ DeterministicFiniteAutomaton::DeterministicFiniteAutomaton(
 
 bool DeterministicFiniteAutomaton::VerifyAutomaton() const {
     if (Q.find(q0) == Q.end()) {
-        std::cerr << "Starea initiala nu apartine multimii de stari.\n";
+        std::cerr << "Starea initiala nu apartine multimii de stari." << std::endl;
         return false;
     }
     for (const auto& finalState : F) {
         if (Q.find(finalState) == Q.end()) {
-            std::cerr << "O stare finala nu apartine multimii de stari.\n";
+            std::cerr << "O stare finala nu apartine multimii de stari." << std::endl;
             return false;
         }
     }
@@ -26,7 +26,7 @@ bool DeterministicFiniteAutomaton::VerifyAutomaton() const {
         if (Q.find(transition.first.first) == Q.end() ||
             Sigma.find(transition.first.second) == Sigma.end() ||
             Q.find(transition.second) == Q.end()) {
-            std::cerr << "O tranzitie nu este valida.\n";
+            std::cerr << "O tranzitie nu este valida." << std::endl;
             return false;
         }
     }
@@ -38,18 +38,18 @@ void DeterministicFiniteAutomaton::PrintAutomaton() const {
     for (const auto& state : Q) {
         std::cout << state << " ";
     }
-    std::cout << "\nAlfabet: ";
+    std::cout << std::endl << "Alfabet: ";
     for (const auto& symbol : Sigma) {
         std::cout << symbol << " ";
     }
-    std::cout << "\nStare initiala: " << q0 << "\nStari finale: ";
+    std::cout << std::endl << "Stare initiala: " << q0 << std::endl << "Stari finale: ";
     for (const auto& finalState : F) {
         std::cout << finalState << " ";
     }
-    std::cout << "\nTranzitii:\n";
+    std::cout << std::endl << "Tranzitii:" << std::endl;
     for (const auto& transition : delta) {
         std::cout << "(" << transition.first.first << ", " << transition.first.second
-            << ") -> " << transition.second << "\n";
+            << ") -> " << transition.second << std::endl;
     }
 }
 
@@ -57,12 +57,12 @@ bool DeterministicFiniteAutomaton::CheckWord(const std::string& word) const {
     std::string currentState = q0;
     for (const auto& symbol : word) {
         if (Sigma.find(symbol) == Sigma.end()) {
-            std::cerr << "Simbolul '" << symbol << "' nu este în alfabet.\n";
+            std::cerr << "Simbolul '" << symbol << "' nu este în alfabet." << std::endl;
             return false;
         }
         auto it = delta.find({ currentState, symbol });
         if (it == delta.end()) {
-            std::cerr << "Nu există tranziție din starea '" << currentState << "' cu simbolul '" << symbol << "'.\n";
+            std::cerr << "Nu există tranzitie din starea '" << currentState << "' cu simbolul '" << symbol << "." << std::endl;
             return false;
         }
         currentState = it->second;
