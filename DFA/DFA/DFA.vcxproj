@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="file.in" />
+    <None Include="file.out" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Automaton.h" />

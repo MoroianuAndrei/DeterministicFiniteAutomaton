@@ -5,15 +5,14 @@
 #include <fstream>
 #include <queue>
 #include <string>
-
 #include <stack>
-#include <cctype>
 
-bool IsValidRegex(const std::string& expresie) {
-    std::stack<char> paranteze;       // Stivă pentru a verifica echilibrarea parantezelor
-    bool ultimulCaracterOperator = true; // Dacă ultimul caracter era un operator
+bool IsValidRegex(const std::string& expresie) 
+{
+    std::stack<char> paranteze;
+    bool ultimulCaracterOperator = true;
     char ultimOperator = NULL;
-    bool aFostCaracter = false;      // Dacă s-a găsit cel puțin un caracter valid
+    bool aFostCaracter = false;
 
     for (size_t i = 0; i < expresie.size(); ++i) 
     {
@@ -21,44 +20,38 @@ bool IsValidRegex(const std::string& expresie) {
 
         if (std::isalnum(c)) 
         {
-            // Caracter valid (literă sau cifră)
             ultimulCaracterOperator = false;
             aFostCaracter = true;
         }
         else if (c == '(') 
         {
-            // Deschiderea unei paranteze
             paranteze.push(c);
-            ultimulCaracterOperator = true; // Paranteza poate urma după un operator
+            ultimulCaracterOperator = true;
         }
         else if (c == ')')
         {
-            // Închiderea unei paranteze
             if (paranteze.empty()) 
             {
-                return false; // Paranteză închisă fără deschidere
+                return false;
             }
             paranteze.pop();
-            ultimulCaracterOperator = false; // Nu poate urma imediat un alt operator
+            ultimulCaracterOperator = false;
         }
         else if (c == '|' || c == '*' || c == '+' || c == '.') 
         {
-            // Operator (inclusiv concatenarea '.')
             if (ultimulCaracterOperator && c != '*' && ultimOperator != '*')
             {
-                return false; // Nu poate urma un alt operator (cu excepția '*')
+                return false;
             }
             ultimulCaracterOperator = true;
             ultimOperator = c;
         }
         else 
         {
-            // Caracter invalid
             return false;
         }
     }
 
-    // Verifică dacă toate parantezele sunt închise
     if (!paranteze.empty())
     {
         return false;
@@ -67,7 +60,6 @@ bool IsValidRegex(const std::string& expresie) {
     if (ultimOperator != NULL && ultimOperator == '*')
         ultimulCaracterOperator = false;
 
-    // Expresia trebuie să aibă cel puțin un caracter valid
     return aFostCaracter && !ultimulCaracterOperator;
 }
 
@@ -80,7 +72,8 @@ void printRegex(std::string str)
     std::cout << std::endl;
 }
 
-int main() {
+int main() 
+{
     std::string regex;
     std::ifstream file("file.in");
     file >> regex;
@@ -92,40 +85,26 @@ int main() {
         return 1;
     }
 
-    // Convertirea la forma poloneză inversată (RPN)
     PolishForm polishConverter;
     std::queue<char> rpnQueue = polishConverter.convertToPolishForm(regex);
 
-    // Transformă forma poloneză inversată într-un string pentru AFN
     std::string rpn;
-    while (!rpnQueue.empty()) {
+    while (!rpnQueue.empty()) 
+    {
         rpn += rpnQueue.front();
         rpnQueue.pop();
     }
 
-    // Construiește AFN-ul din forma poloneză inversată
     NondeterministicFiniteAutomaton nfa;
     nfa = nfa.FromRegex(rpn);
 
-    // Afișează automatul construit
-    //std::cout << "Automatul Finit Nedeterminist creat din forma poloneza a expresiei regulate" << std::endl;
     //nfa.PrintAutomaton();
-    //for (int i = 0; i < 10; i++)
-    //    std::cout << std::endl;
+    //std::cout << std::endl;
 
     DeterministicFiniteAutomaton dfa;
     dfa = nfa.ConvertToDFA();
 
-    //std::cout << "Automatul Finit Determinist creat din Automatul Finit Nedeterminist cu lambda tranzitii" << std::endl;
-    //dfa.PrintAutomaton();
-    //for (int i = 0; i < 10; i++)
-    //    std::cout << std::endl;
-
-    // Rename
     dfa.RenameStates();
-
-    //std::cout << "Automatul Finit Determinist creat dupa redenumirea starilor" << std::endl;
-    //dfa.PrintAutomaton();
 
     if (dfa.VerifyAutomaton())
     {
@@ -140,6 +119,7 @@ int main() {
             std::cout << "Alegeti o optiune: ";
             std::cin >> optiune;
             std::string word;
+            std::ofstream file("file.out");
 
             switch (optiune)
             {
@@ -149,6 +129,7 @@ int main() {
                 break;
             case 2:
                 dfa.PrintAutomaton();
+                dfa.PrintAutomatonInFile(file);
                 std::cout << std::endl;
                 break;
             case 3:
@@ -169,6 +150,9 @@ int main() {
             default:
                 std::cout << "Optiune invalida. Încercati din nou." << std::endl;
             }
+
+            file.close();
+
         } while (optiune != 0);
     }
     else

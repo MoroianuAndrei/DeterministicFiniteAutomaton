@@ -3,8 +3,10 @@
 #include <set>
 #include <map>
 #include <string>
+#include <fstream>
 
-class DeterministicFiniteAutomaton {
+class DeterministicFiniteAutomaton 
+{
 public:
     using Transition = std::map<std::pair<std::string, char>, std::string>;
 
@@ -21,6 +23,8 @@ public:
     bool VerifyAutomaton() const;
 
     void PrintAutomaton() const;
+
+    void PrintAutomatonInFile(std::ofstream& file);
     
     bool CheckWord(const std::string& word) const;
 

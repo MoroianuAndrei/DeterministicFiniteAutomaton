@@ -2,55 +2,67 @@
 
 int NondeterministicFiniteAutomaton::stateCounter = 0;
 
-void NondeterministicFiniteAutomaton::AddState(const std::string& state, bool isInitial, bool isFinal) {
+void NondeterministicFiniteAutomaton::AddState(const std::string& state, bool isInitial, bool isFinal) 
+{
     states.insert(state);
-    if (isInitial) {
+    if (isInitial) 
+    {
         initialState = state;
     }
-    if (isFinal) {
+    if (isFinal) 
+    {
         finalStates.insert(state);
     }
 }
 
-void NondeterministicFiniteAutomaton::AddTransition(const std::string& from, char symbol, const std::string& to) {
-    transitions[{from, symbol}].insert(to); // Adăugăm starea în set
-    alphabet.insert(symbol); // Adăugăm simbolul în alfabet
+void NondeterministicFiniteAutomaton::AddTransition(const std::string& from, char symbol, const std::string& to) 
+{
+    transitions[{from, symbol}].insert(to);
+    alphabet.insert(symbol);
 }
 
-void NondeterministicFiniteAutomaton::AddLambdaTransition(const std::string& from, const std::string& to) {
-    transitions[{from, '\0'}].insert(to); // Inserăm tranziția λ
+void NondeterministicFiniteAutomaton::AddLambdaTransition(const std::string& from, const std::string& to)
+{
+    transitions[{from, '\0'}].insert(to);
 }
 
-void NondeterministicFiniteAutomaton::PrintAutomaton() const {
+void NondeterministicFiniteAutomaton::PrintAutomaton() const 
+{
     std::cout << "Stari: ";
-    for (const auto& state : states) {
+    for (const auto& state : states) 
+    {
         std::cout << state << " ";
     }
     std::cout << std::endl << "Alfabet: ";
-    for (const auto& symbol : alphabet) {
+    for (const auto& symbol : alphabet) 
+    {
         std::cout << symbol << " ";
     }
     std::cout << std::endl << "Tranzitii:" << std::endl;
-    for (const auto& transition : transitions) {
+    for (const auto& transition : transitions) 
+    {
         std::cout << transition.first.first << " --"
             << (transition.first.second == '\0' ? "(lambda)" : std::string(1, transition.first.second))
             << "--> { ";
-        for (const auto& target : transition.second) {
+        for (const auto& target : transition.second) 
+        {
             std::cout << target << " ";
         }
-        std::cout << "}std::endl";
+        std::cout << "}" << std::endl;
     }
     std::cout << "Starea initiala: " << initialState << std::endl << "Starile finale: ";
-    for (const auto& state : finalStates) {
+    for (const auto& state : finalStates) 
+    {
         std::cout << state << " ";
     }
     std::cout << std::endl;
 }
 
 
-NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::CreateBasicAutomaton(char symbol) {
+NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::CreateBasicAutomaton(char symbol)
+{
     NondeterministicFiniteAutomaton automaton;
-    std::string start = "q" + std::to_string(stateCounter++); // Folosește doar variabile statice sau locale
+    std::string start = "q" + std::to_string(stateCounter++);
     std::string end = "q" + std::to_string(stateCounter++);
     automaton.AddState(start, true, false);
     automaton.AddState(end, false, true);
@@ -59,10 +71,11 @@ NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::CreateBasicAuto
     return automaton;
 }
 
-// Funcție pentru concatenare
-NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::Concatenate(const NondeterministicFiniteAutomaton& a, const NondeterministicFiniteAutomaton& b) {
+NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::Concatenate(const NondeterministicFiniteAutomaton& a, const NondeterministicFiniteAutomaton& b)
+{
     NondeterministicFiniteAutomaton result = a;
-    for (const auto& finalState : a.finalStates) {
+    for (const auto& finalState : a.finalStates) 
+    {
         result.AddLambdaTransition(finalState, b.initialState);
     }
     result.states.insert(b.states.begin(), b.states.end());
@@ -72,8 +85,8 @@ NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::Concatenate(con
     return result;
 }
 
-// Funcție pentru alternare (sau)
-NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::Alternate(const NondeterministicFiniteAutomaton& a, const NondeterministicFiniteAutomaton& b) {
+NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::Alternate(const NondeterministicFiniteAutomaton& a, const NondeterministicFiniteAutomaton& b) 
+{
     NondeterministicFiniteAutomaton result;
     std::string newStart = "q" + std::to_string(stateCounter++);
     std::string newEnd = "q" + std::to_string(stateCounter++);
@@ -81,10 +94,12 @@ NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::Alternate(const
     result.AddState(newEnd, false, true);
     result.AddLambdaTransition(newStart, a.initialState);
     result.AddLambdaTransition(newStart, b.initialState);
-    for (const auto& finalState : a.finalStates) {
+    for (const auto& finalState : a.finalStates) 
+    {
         result.AddLambdaTransition(finalState, newEnd);
     }
-    for (const auto& finalState : b.finalStates) {
+    for (const auto& finalState : b.finalStates) 
+    {
         result.AddLambdaTransition(finalState, newEnd);
     }
     result.states.insert(a.states.begin(), a.states.end());
@@ -97,8 +112,8 @@ NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::Alternate(const
     return result;
 }
 
-// Funcție pentru închiderea Kleene
-NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::KleeneStar(const NondeterministicFiniteAutomaton& a) {
+NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::KleeneStar(const NondeterministicFiniteAutomaton& a)
+{
     NondeterministicFiniteAutomaton result;
     std::string newStart = "q" + std::to_string(stateCounter++);
     std::string newEnd = "q" + std::to_string(stateCounter++);
@@ -106,7 +121,8 @@ NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::KleeneStar(cons
     result.AddState(newEnd, false, true);
     result.AddLambdaTransition(newStart, a.initialState);
     result.AddLambdaTransition(newStart, newEnd);
-    for (const auto& finalState : a.finalStates) {
+    for (const auto& finalState : a.finalStates) 
+    {
         result.AddLambdaTransition(finalState, newEnd);
         result.AddLambdaTransition(finalState, a.initialState);
     }
@@ -117,24 +133,29 @@ NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::KleeneStar(cons
     return result;
 }
 
-// Funcție pentru a construi un AFN dintr-un regex
-NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::FromRegex(const std::string& regex) {
+NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::FromRegex(const std::string& regex) 
+{
     std::stack<NondeterministicFiniteAutomaton> automatonStack;
-    for (char symbol : regex) {
-        if (isalnum(symbol)) {
+    for (char symbol : regex) 
+    {
+        if (isalnum(symbol))
+        {
             automatonStack.push(CreateBasicAutomaton(symbol));
         }
-        else if (symbol == '.') {
+        else if (symbol == '.') 
+        {
             NondeterministicFiniteAutomaton b = automatonStack.top(); automatonStack.pop();
             NondeterministicFiniteAutomaton a = automatonStack.top(); automatonStack.pop();
             automatonStack.push(Concatenate(a, b));
         }
-        else if (symbol == '|') {
+        else if (symbol == '|') 
+        {
             NondeterministicFiniteAutomaton b = automatonStack.top(); automatonStack.pop();
             NondeterministicFiniteAutomaton a = automatonStack.top(); automatonStack.pop();
             automatonStack.push(Alternate(a, b));
         }
-        else if (symbol == '*') {
+        else if (symbol == '*') 
+        {
             NondeterministicFiniteAutomaton a = automatonStack.top(); automatonStack.pop();
             automatonStack.push(KleeneStar(a));
         }
@@ -142,21 +163,26 @@ NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::FromRegex(const
     return automatonStack.top();
 }
 
-std::set<std::string> NondeterministicFiniteAutomaton::LambdaClosure(const std::string& state) const {
+std::set<std::string> NondeterministicFiniteAutomaton::LambdaClosure(const std::string& state) const 
+{
     std::set<std::string> closure;
     std::queue<std::string> toProcess;
     closure.insert(state);
     toProcess.push(state);
 
-    while (!toProcess.empty()) {
+    while (!toProcess.empty()) 
+    {
         std::string current = toProcess.front();
         toProcess.pop();
 
         auto range = transitions.equal_range({ current, '\0' });
         for (const auto& transition : transitions) {
-            if (transition.first.first == current && transition.first.second == '\0') { // λ-tranziție
-                for (const auto& target : transition.second) { // Iterăm prin toate stările țintă
-                    if (closure.find(target) == closure.end()) {
+            if (transition.first.first == current && transition.first.second == '\0')
+            {
+                for (const auto& target : transition.second) 
+                {
+                    if (closure.find(target) == closure.end()) 
+                    {
                         closure.insert(target);
                         toProcess.push(target);
                     }
@@ -167,80 +193,84 @@ std::set<std::string> NondeterministicFiniteAutomaton::LambdaClosure(const std::
     return closure;
 }
 
-// Implementare funcție LambdaClosure pentru o mulțime de stări
-std::set<std::string> NondeterministicFiniteAutomaton::LambdaClosure(const std::set<std::string>& states) const {
+std::set<std::string> NondeterministicFiniteAutomaton::LambdaClosure(const std::set<std::string>& states) const
+{
     std::set<std::string> closure;
-    for (const auto& state : states) {
+    for (const auto& state : states)
+    {
         std::set<std::string> singleClosure = LambdaClosure(state);
         closure.insert(singleClosure.begin(), singleClosure.end());
     }
     return closure;
 }
 
-// Implementare funcție ConvertToDFA pentru conversia într-un AFD
-DeterministicFiniteAutomaton NondeterministicFiniteAutomaton::ConvertToDFA() const {
+DeterministicFiniteAutomaton NondeterministicFiniteAutomaton::ConvertToDFA() const
+{
     std::set<std::string> dfaStates;
-    std::set<char> dfaAlphabet = alphabet; // Alfabetul DFA
+    std::set<char> dfaAlphabet = alphabet;
     std::map<std::pair<std::string, char>, std::string> dfaTransitions;
     std::set<std::string> dfaFinalStates;
     std::map<std::set<std::string>, std::string> stateMapping;
     std::queue<std::set<std::string>> toProcess;
 
-    // Calculăm ε-închiderea pentru starea inițială
     std::set<std::string> startClosure = LambdaClosure(initialState);
-    std::string startState = "{" + initialState + "}"; // Numele stării inițiale în DFA
+    std::string startState = "{" + initialState + "}";
     stateMapping[startClosure] = startState;
     dfaStates.insert(startState);
     toProcess.push(startClosure);
 
-    while (!toProcess.empty()) {
+    while (!toProcess.empty()) 
+    {
         std::set<std::string> currentSet = toProcess.front();
         toProcess.pop();
         std::string currentStateName = stateMapping[currentSet];
 
-        // Iterăm prin fiecare simbol din alfabet
-        for (const auto& symbol : dfaAlphabet) {
-            if (symbol == '\0') continue; // Ignorăm λ
+        for (const auto& symbol : dfaAlphabet) 
+        {
+            if (symbol == '\0') continue;
 
             std::set<std::string> moveSet;
-            // Calculăm setul de stări atinse prin simbolul curent
-            for (const auto& state : currentSet) {
+            for (const auto& state : currentSet) 
+            {
                 auto range = transitions.equal_range({ state, symbol });
-                for (const auto& transition : transitions) {
-                    if (transition.first.first == state && transition.first.second == symbol) {
+                for (const auto& transition : transitions)
+                {
+                    if (transition.first.first == state && transition.first.second == symbol) 
+                    {
                         moveSet.insert(transition.second.begin(), transition.second.end());
                     }
                 }
             }
 
-            // Calculăm ε-închiderea pentru setul rezultat
             std::set<std::string> closure = LambdaClosure(moveSet);
-            if (!closure.empty() && stateMapping.find(closure) == stateMapping.end()) {
-                std::string newStateName = "{"; // Generăm un nume pentru noua stare
-                for (const auto& s : closure) {
+            if (!closure.empty() && stateMapping.find(closure) == stateMapping.end())
+            {
+                std::string newStateName = "{";
+                for (const auto& s : closure)
+                {
                     newStateName += s + ",";
                 }
-                newStateName.back() = '}'; // Închidem acolada
+                newStateName.back() = '}';
                 stateMapping[closure] = newStateName;
                 dfaStates.insert(newStateName);
-                toProcess.push(closure); // Actualizăm toProcess cu noul set de stări
+                toProcess.push(closure);
             }
 
-            // Adăugăm tranziția în AFD
-            if (!closure.empty()) {
+            if (!closure.empty()) 
+            {
                 dfaTransitions[{currentStateName, symbol}] = stateMapping[closure];
             }
         }
 
-        // Verificăm dacă starea curentă este finală
-        for (const auto& state : currentSet) {
-            if (finalStates.find(state) != finalStates.end()) {
+        for (const auto& state : currentSet) 
+        {
+            if (finalStates.find(state) != finalStates.end()) 
+            {
                 dfaFinalStates.insert(currentStateName);
                 break;
             }
         }
     }
 
-    // Returnăm AFD-ul construit
     return DeterministicFiniteAutomaton(dfaStates, dfaAlphabet, dfaTransitions, startState, dfaFinalStates);
 }

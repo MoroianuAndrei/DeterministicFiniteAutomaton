@@ -6,10 +6,11 @@
 #include <stack>
 #include "DeterministicFiniteAutomaton.h"
 
-class NondeterministicFiniteAutomaton {
+class NondeterministicFiniteAutomaton
+{
 public:
 
-    static int stateCounter; // Variabila statică pentru contorul stărilor
+    static int stateCounter;
 
     NondeterministicFiniteAutomaton() = default;
 
