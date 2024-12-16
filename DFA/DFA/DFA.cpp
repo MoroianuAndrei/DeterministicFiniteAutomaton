@@ -99,9 +99,7 @@ int main()
     std::ifstream file("file.in");
     file >> regex;
     file.close();
-    std::cout << regex << std::endl;
     regex = Plus(regex);
-    std::cout << regex << std::endl;
 
     if (!IsValidRegex(regex))
     {
@@ -115,16 +113,12 @@ int main()
     std::string rpn;
     while (!rpnQueue.empty()) 
     {
-        std::cout << rpnQueue.front() << " ";
         rpn += rpnQueue.front();
         rpnQueue.pop();
     }
 
     NondeterministicFiniteAutomaton nfa;
     nfa = nfa.FromRegex(rpn);
-
-    //nfa.PrintAutomaton();
-    //std::cout << std::endl;
 
     DeterministicFiniteAutomaton dfa;
     dfa = nfa.ConvertToDFA();

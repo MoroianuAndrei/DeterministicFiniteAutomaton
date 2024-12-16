@@ -18,45 +18,45 @@ bool PolishForm::IsLetterOrNumber(const char& c)
     return std::regex_match(std::string(1, c), rule);
 }
 
-std::queue<char> PolishForm::convertToPolishForm(std::string& str) 
+std::queue<char> PolishForm::convertToPolishForm(std::string& str)
 {
     std::queue<char> polish;
     std::stack<char> op_stack;
 
-        for (char c : str)
+    for (char c : str)
+    {
+        if (IsLetterOrNumber(c))
         {
-            if (IsLetterOrNumber(c))
+            polish.push(c);
+        }
+        else
+        {
+            if (c == '(')
             {
-                polish.push(c);
+                op_stack.push(c);
+            }
+            else if (c == ')')
+            {
+                while (!op_stack.empty() && op_stack.top() != '(')
+                {
+                    polish.push(op_stack.top());
+                    op_stack.pop();
+                }
+                if (!op_stack.empty()) op_stack.pop();
             }
             else
             {
-                if (c == '(')
+                while (!op_stack.empty() && priority(op_stack.top()) >= priority(c))
                 {
-                    op_stack.push(c);
+                    polish.push(op_stack.top());
+                    op_stack.pop();
                 }
-                else if (c == ')')
-                {
-                    while (!op_stack.empty() && op_stack.top() != '(')
-                    {
-                        polish.push(op_stack.top());
-                        op_stack.pop();
-                    }
-                    if (!op_stack.empty()) op_stack.pop();
-                }
-                else
-                {
-                    while (!op_stack.empty() && priority(op_stack.top()) >= priority(c))
-                    {
-                        polish.push(op_stack.top());
-                        op_stack.pop();
-                    }
-                    op_stack.push(c);
-                }
+                op_stack.push(c);
             }
         }
+    }
 
-    while (!op_stack.empty()) 
+    while (!op_stack.empty())
     {
         polish.push(op_stack.top());
         op_stack.pop();
