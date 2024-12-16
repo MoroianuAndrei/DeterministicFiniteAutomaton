@@ -20,37 +20,33 @@ bool PolishForm::IsLetterOrNumber(const char& c)
 
 std::queue<char> PolishForm::convertToPolishForm(std::string& str) 
 {
-    std::ifstream file("file.in");
     std::queue<char> polish;
     std::stack<char> op_stack;
 
-    while (!file.eof()) 
-    {
-        file >> str;
         for (char c : str)
         {
-            if (IsLetterOrNumber(c)) 
+            if (IsLetterOrNumber(c))
             {
                 polish.push(c);
             }
-            else 
+            else
             {
-                if (c == '(') 
+                if (c == '(')
                 {
                     op_stack.push(c);
                 }
                 else if (c == ')')
                 {
-                    while (!op_stack.empty() && op_stack.top() != '(') 
+                    while (!op_stack.empty() && op_stack.top() != '(')
                     {
                         polish.push(op_stack.top());
                         op_stack.pop();
                     }
                     if (!op_stack.empty()) op_stack.pop();
                 }
-                else 
+                else
                 {
-                    while (!op_stack.empty() && priority(op_stack.top()) >= priority(c)) 
+                    while (!op_stack.empty() && priority(op_stack.top()) >= priority(c))
                     {
                         polish.push(op_stack.top());
                         op_stack.pop();
@@ -59,7 +55,6 @@ std::queue<char> PolishForm::convertToPolishForm(std::string& str)
                 }
             }
         }
-    }
 
     while (!op_stack.empty()) 
     {
@@ -74,6 +69,4 @@ std::queue<char> PolishForm::convertToPolishForm(std::string& str)
     //}
 
     return polish;
-
-    file.close();
 }

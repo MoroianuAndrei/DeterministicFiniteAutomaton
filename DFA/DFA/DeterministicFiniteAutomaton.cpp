@@ -96,13 +96,13 @@ bool DeterministicFiniteAutomaton::CheckWord(const std::string& word) const
     {
         if (Sigma.find(symbol) == Sigma.end()) 
         {
-            std::cerr << "Simbolul '" << symbol << "' nu este în alfabet." << std::endl;
+            std::cerr << "Simbolul '" << symbol << "' nu este in alfabet." << std::endl;
             return false;
         }
         auto it = delta.find({ currentState, symbol });
         if (it == delta.end())
         {
-            std::cerr << "Nu există tranzitie din starea '" << currentState << "' cu simbolul '" << symbol << "." << std::endl;
+            std::cerr << "Nu exista tranzitie din starea '" << currentState << "' cu simbolul '" << symbol << "." << std::endl;
             return false;
         }
         currentState = it->second;

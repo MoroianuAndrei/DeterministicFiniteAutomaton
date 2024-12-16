@@ -72,12 +72,36 @@ void printRegex(std::string str)
     std::cout << std::endl;
 }
 
+std::string Plus(std::string regex)
+{
+    std::string returnRegex;
+    char pred = NULL;
+    for (char c : regex)
+    {
+        if (c == '+')
+        {
+            returnRegex += '.';
+            returnRegex += pred;
+            returnRegex += '*';
+        }
+        else
+            returnRegex += c;
+
+        pred = c;
+    }
+
+    return returnRegex;
+}
+
 int main() 
 {
     std::string regex;
     std::ifstream file("file.in");
     file >> regex;
     file.close();
+    std::cout << regex << std::endl;
+    regex = Plus(regex);
+    std::cout << regex << std::endl;
 
     if (!IsValidRegex(regex))
     {
@@ -91,6 +115,7 @@ int main()
     std::string rpn;
     while (!rpnQueue.empty()) 
     {
+        std::cout << rpnQueue.front() << " ";
         rpn += rpnQueue.front();
         rpnQueue.pop();
     }

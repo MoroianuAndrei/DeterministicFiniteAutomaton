@@ -232,7 +232,6 @@ DeterministicFiniteAutomaton NondeterministicFiniteAutomaton::ConvertToDFA() con
             std::set<std::string> moveSet;
             for (const auto& state : currentSet) 
             {
-                auto range = transitions.equal_range({ state, symbol });
                 for (const auto& transition : transitions)
                 {
                     if (transition.first.first == state && transition.first.second == symbol) 
