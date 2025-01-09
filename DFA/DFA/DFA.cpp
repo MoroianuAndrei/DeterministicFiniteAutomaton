@@ -7,46 +7,47 @@
 #include <string>
 #include <stack>
 
-bool IsValidRegex(const std::string& expresie) 
+bool IsValidRegex(const std::string& expresie)
 {
     std::stack<char> paranteze;
     bool ultimulCaracterOperator = true;
     char ultimOperator = NULL;
     bool aFostCaracter = false;
 
-    for (size_t i = 0; i < expresie.size(); ++i) 
+    for (size_t i = 0; i < expresie.size(); ++i)
     {
         char c = expresie[i];
 
-        if (std::isalnum(c)) 
+        if (std::isalnum(c))
         {
             ultimulCaracterOperator = false;
             aFostCaracter = true;
         }
-        else if (c == '(') 
+        else if (c == '(')
         {
             paranteze.push(c);
             ultimulCaracterOperator = true;
         }
         else if (c == ')')
         {
-            if (paranteze.empty()) 
+            if (paranteze.empty())
             {
                 return false;
             }
             paranteze.pop();
             ultimulCaracterOperator = false;
         }
-        else if (c == '|' || c == '*' || c == '+' || c == '.') 
+        else if (c == '|' || c == '*' || c == '+' || c == '.')
         {
-            if (ultimulCaracterOperator && c != '*' && ultimOperator != '*')
+            // Nu putem avea operatori imediat după alți operatori (exceptând cazul '*' și '+' după un caracter valid)
+            if (ultimulCaracterOperator && c != '*' && c != '+' && ultimOperator != '*' && ultimOperator != '+')
             {
                 return false;
             }
             ultimulCaracterOperator = true;
             ultimOperator = c;
         }
-        else 
+        else
         {
             return false;
         }
@@ -57,7 +58,8 @@ bool IsValidRegex(const std::string& expresie)
         return false;
     }
 
-    if (ultimOperator != NULL && ultimOperator == '*')
+    // Ultimul caracter nu trebuie să fie un operator
+    if (ultimOperator != NULL && (ultimOperator == '*' || ultimOperator == '+'))
         ultimulCaracterOperator = false;
 
     return aFostCaracter && !ultimulCaracterOperator;
@@ -72,34 +74,12 @@ void printRegex(std::string str)
     std::cout << std::endl;
 }
 
-std::string Plus(std::string regex)
-{
-    std::string returnRegex;
-    char pred = NULL;
-    for (char c : regex)
-    {
-        if (c == '+')
-        {
-            returnRegex += '.';
-            returnRegex += pred;
-            returnRegex += '*';
-        }
-        else
-            returnRegex += c;
-
-        pred = c;
-    }
-
-    return returnRegex;
-}
-
 int main() 
 {
     std::string regex;
     std::ifstream file("file.in");
     file >> regex;
     file.close();
-    regex = Plus(regex);
 
     if (!IsValidRegex(regex))
     {
@@ -171,6 +151,8 @@ int main()
             }
 
             file.close();
+
+            std::cout << std::endl;
 
         } while (optiune != 0);
     }

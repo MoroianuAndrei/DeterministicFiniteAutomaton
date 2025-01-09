@@ -3,12 +3,12 @@
 #include <fstream>
 #include <regex>
 
-int PolishForm::priority(char c) 
+int PolishForm::priority(char c)
 {
     if (c == '(') return 0;
     if (c == '|') return 1;
     if (c == '.') return 2;
-    if (c == '*') return 3;
+    if (c == '*' || c == '+') return 3;
     return -1; // pentru cazuri neașteptate
 }
 

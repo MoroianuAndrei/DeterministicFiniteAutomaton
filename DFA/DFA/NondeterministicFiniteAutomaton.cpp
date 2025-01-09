@@ -138,26 +138,32 @@ NondeterministicFiniteAutomaton NondeterministicFiniteAutomaton::FromRegex(const
     std::stack<NondeterministicFiniteAutomaton> automatonStack;
     for (char symbol : regex) 
     {
-        if (isalnum(symbol))
+        if (isalnum(symbol)) // Dacă este un caracter valid (literă sau număr)
         {
             automatonStack.push(CreateBasicAutomaton(symbol));
         }
-        else if (symbol == '.') 
+        else if (symbol == '.') // Concatenare
         {
             NondeterministicFiniteAutomaton b = automatonStack.top(); automatonStack.pop();
             NondeterministicFiniteAutomaton a = automatonStack.top(); automatonStack.pop();
             automatonStack.push(Concatenate(a, b));
         }
-        else if (symbol == '|') 
+        else if (symbol == '|') // Alternanță
         {
             NondeterministicFiniteAutomaton b = automatonStack.top(); automatonStack.pop();
             NondeterministicFiniteAutomaton a = automatonStack.top(); automatonStack.pop();
             automatonStack.push(Alternate(a, b));
         }
-        else if (symbol == '*') 
+        else if (symbol == '*') // Kleene Star
         {
             NondeterministicFiniteAutomaton a = automatonStack.top(); automatonStack.pop();
             automatonStack.push(KleeneStar(a));
+        }
+        else if (symbol == '+') // Adăugat suport pentru "+"
+        {
+            NondeterministicFiniteAutomaton a = automatonStack.top(); automatonStack.pop();
+            NondeterministicFiniteAutomaton starAutomaton = KleeneStar(a); // Creăm automatul pentru a*
+            automatonStack.push(Concatenate(starAutomaton, a)); // Concatenăm a* cu a pentru a obține a+
         }
     }
     return automatonStack.top();
